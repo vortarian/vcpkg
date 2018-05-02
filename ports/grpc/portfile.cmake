@@ -15,11 +15,7 @@ vcpkg_from_github(
     REF v1.11.0
     SHA512 3127cf0e66cd0712d905e6008adf6f80d787ad97eae2fba38fa3f4d343849a3dc3ca8f2ccbc82020e812fdb272e9577584c298a5b623fbdcac40c1efd7877855
     HEAD_REF master
-)
-
-# Issue: https://github.com/grpc/grpc/issues/10759
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
+    # Issue: https://github.com/grpc/grpc/issues/10759
     PATCHES
         ${CMAKE_CURRENT_LIST_DIR}/disable-csharp-ext.patch
 )
@@ -50,10 +46,7 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
 )
 
-# gRPC runs built executables during the build, so they need access to the installed DLLs.
-set(ENV{PATH} "$ENV{PATH};${CURRENT_INSTALLED_DIR}/bin;${CURRENT_INSTALLED_DIR}/debug/bin")
-
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/grpc")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
