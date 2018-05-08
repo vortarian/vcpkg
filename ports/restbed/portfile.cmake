@@ -46,6 +46,7 @@ set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
 message(STATUS "Configuring CMAKE")
 vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
         CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
         OPTIONS
             -DBUILD_TESTS=YES
@@ -56,7 +57,9 @@ vcpkg_configure_cmake(
 )
 
 message(STATUS "CMAKE INSTALL")
-vcpkg_install_cmake()
+vcpkg_build_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/restbed TARGET_PATH share/restbed)
 
 message(STATUS "COPYING SOURCE")
 file(INSTALL ${SOURCE_PATH}/source/corvusoft DESTINATION ${CURRENT_PACKAGES_DIR}/include/ )
