@@ -57,14 +57,15 @@ vcpkg_configure_cmake(
 )
 
 message(STATUS "CMAKE INSTALL")
-vcpkg_build_cmake()
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/restbed TARGET_PATH share/restbed)
 
 message(STATUS "COPYING SOURCE")
 file(INSTALL ${SOURCE_PATH}/source/corvusoft DESTINATION ${CURRENT_PACKAGES_DIR}/include/ )
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restbed/ )
 file(COPY ${CURRENT_PACKAGES_DIR}/share/restbed/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/restbed/copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 
 message(STATUS "FINISHED")
