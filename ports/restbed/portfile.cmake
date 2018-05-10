@@ -49,8 +49,8 @@ vcpkg_configure_cmake(
         PREFER_NINJA
         CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
         OPTIONS
-            -DBUILD_TESTS=YES
-            -DBUILD_EXAMPLES=YES
+	    -DBUILD_TESTS=NO
+	    -DBUILD_EXAMPLES=NO
             -DBUILD_SSL=YES
             -DBUILD_SHARED=NO
             -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl"
