@@ -58,7 +58,7 @@ vcpkg_configure_cmake(
 
 message(STATUS "CMAKE INSTALL")
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+# vcpkg_fixup_cmake_targets()
 
 
 message(STATUS "COPYING SOURCE")
