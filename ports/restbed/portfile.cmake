@@ -34,32 +34,40 @@ message(STATUS "Adding worktree done")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/)
 
-#set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/restbed-${RESTBED_VERSION})
-#vcpkg_download_distfile(ARCHIVE_FILE
-    #URLS "https://github.com/Corvusoft/restbed/archive/${RESTBED_VERSION}.tar.gz"
-    #FILENAME "restbed-${RESTBED_VERSION}.tar.gz"
-    #SHA512 81fbc7c90b6690ba9926c7990495bf114d4b4511785cf8ad7d526a119104e6eea0d0945c7e73e94ff7005b996b96ec4ecb067e192da04afa20e854c1f982549d
-#)
-#vcpkg_extract_source_archive(${ARCHIVE_FILE})
-
-
-message(STATUS "Configuring CMAKE")
-vcpkg_configure_cmake(
+IF(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
+message(STATUS "Configuring CMAKE for Windows Builds")
+  vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
         CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
         OPTIONS
-	    -DBUILD_TESTS=NO
-	    -DBUILD_EXAMPLES=NO
-            -DBUILD_SSL=YES
-            -DBUILD_SHARED=NO
-            -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl"
-)
-
-message(STATUS "CMAKE INSTALL")
-vcpkg_install_cmake()
-# vcpkg_fixup_cmake_targets()
-
+          -DBUILD_TESTS=NO
+          -DBUILD_EXAMPLES=NO
+          -DBUILD_SSL=NO
+          -DBUILD_SHARED=NO
+  )
+  vcpkg_install_cmake()
+  vcpkg_copy_pdbs()
+  message(STATUS "COPYING WINDOWS DLLs")
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/restbed.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/ )
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/restbed.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/ )
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/restbed.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/ )
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/restbed.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/bin/ )
+ELSE()
+  message(STATUS "Configuring CMAKE for Linux Builds")
+  vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
+        OPTIONS
+          -DBUILD_TESTS=NO
+          -DBUILD_EXAMPLES=NO
+          -DBUILD_SSL=YES
+          -DBUILD_SHARED=YES
+          -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl"
+  )
+  vcpkg_install_cmake()
+ENDIF(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
 
 message(STATUS "COPYING SOURCE")
 file(INSTALL ${SOURCE_PATH}/source/corvusoft DESTINATION ${CURRENT_PACKAGES_DIR}/include/ )
