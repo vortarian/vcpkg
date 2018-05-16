@@ -41,18 +41,26 @@ message(STATUS "Configuring CMAKE for Windows Builds")
         PREFER_NINJA
         CURRENT_PACKAGES_DIR ${CURRENT_PACKAGES_DIR}
         OPTIONS
+	  -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=1
           -DBUILD_TESTS=NO
           -DBUILD_EXAMPLES=NO
           -DBUILD_SSL=NO
-          -DBUILD_SHARED=NO
+	  -DBUILD_SHARED=YES
   )
   vcpkg_install_cmake()
   vcpkg_copy_pdbs()
   message(STATUS "COPYING WINDOWS DLLs")
   file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/restbed.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/ )
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/restbed.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/ )
   file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/restbed.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/ )
   file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/restbed.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/ )
+  file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/restbed.lib DESTINATION ${CURRENT_PACKAGES_DIR}/bin/ )
   file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/restbed.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/bin/ )
+
+  # The next 3 lines shouldn't be necessary, but the build isn't putting the files there
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
+  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+  SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 ELSE()
   message(STATUS "Configuring CMAKE for Linux Builds")
   vcpkg_configure_cmake(
