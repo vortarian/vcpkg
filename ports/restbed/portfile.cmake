@@ -1,8 +1,8 @@
 include(vcpkg_common_functions)
 
-set(RESTBED_VERSION 4.6)
+set(RESTBED_VERSION 4.6.1)
 
-set(GIT_URL "git://github.com/corvusoft/restbed.git")
+set(GIT_URL "git://github.com/vortarian/restbed.git")
 set(GIT_REF "${RESTBED_VERSION}") # Commit
 
 # Prepare source dir
