@@ -63,6 +63,9 @@ message(STATUS "Configuring CMAKE for Windows Builds")
   SET(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 ELSE()
   message(STATUS "Configuring CMAKE for Linux Builds")
+  SET( CMAKE_CC_FLAGS  "${CMAKE_CXX_FLAGS} -fPIC -D_REENTRANT " )
+  SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -fPIC -D_REENTRANT " )
+  SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -fPIC -D_REENTRANT " )
   vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
@@ -71,8 +74,7 @@ ELSE()
           -DBUILD_TESTS=NO
           -DBUILD_EXAMPLES=NO
           -DBUILD_SSL=YES
-          -DBUILD_SHARED=YES
-          -DCMAKE_CXX_STANDARD_LIBRARIES="-ldl"
+          -DBUILD_SHARED=NO
   )
   vcpkg_install_cmake()
 ENDIF(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
